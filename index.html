@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IoT Data Usage Calculator</title>
+<meta name="description" content="Estimate monthly cellular data for GPS trackers, meters, POS terminals and other IoT devices.">
+<style>
+:root{--bg:#09090b;--card:#18181b;--line:#27272a;--text:#fafafa;--muted:#a1a1aa;--accent:#34d399}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:2rem;margin:.2em 0}
+p.lead{color:var(--muted);max-width:720px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1.3fr .7fr;align-items:start}.result{position:sticky;top:16px}}
+.fields{display:grid;gap:12px}
+@media(min-width:600px){.fields{grid-template-columns:1fr 1fr}}
+label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.in{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.in input{flex:1;min-width:0;background:transparent;border:0;color:var(--text);padding:10px;font-size:1rem}
+.in span{padding:0 10px;color:#71717a;font:12px ui-monospace,monospace}
+.presets button{border:1px solid #3f3f46;border-radius:999px;padding:8px 14px;color:#d4d4d8;background:var(--card);cursor:pointer;min-height:44px;margin:0 6px 6px 0}
+.presets button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.big{font-size:2.4rem;font-weight:700}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-top:10px}
+.note{border:1px solid var(--line);border-radius:10px;padding:12px;font-size:.9rem;margin-top:16px}
+a{color:var(--accent)}
+.btn{display:block;text-align:center;margin-top:12px;padding:12px;border-radius:10px;background:var(--accent);color:#052e16;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+<h1>IoT Data Usage Calculator</h1>
+<p class="lead">Estimate the monthly cellular data of GPS trackers, meters, POS terminals and other IoT devices. Every assumption is editable. The result is an estimate; size the final plan from pilot measurements.</p>
+
+<div class="grid" data-iot-calculator>
+<div>
+<div class="card presets">
+<button type="button" data-preset="gps" aria-pressed="true">GPS tracker</button>
+<button type="button" data-preset="meter" aria-pressed="false">Smart meter</button>
+<button type="button" data-preset="pos" aria-pressed="false">POS terminal</button>
+</div>
+<div class="card"><div class="fields">
+<div><label for="f1">Number of devices</label><div class="in"><input id="f1" type="number" min="0" data-field="devices"></div></div>
+<div><label for="f2">Reporting interval while active</label><div class="in"><input id="f2" type="number" min="0" data-field="interval"><span>s</span></div></div>
+<div><label for="f3">Active hours per day</label><div class="in"><input id="f3" type="number" min="0" step="0.5" data-field="activeHours"><span>h</span></div></div>
+<div><label for="f4">Payload per report</label><div class="in"><input id="f4" type="number" min="0" data-field="payload"><span>B</span></div></div>
+<div><label for="f5">Protocol overhead per message</label><div class="in"><input id="f5" type="number" min="0" data-field="overhead"><span>B</span></div></div>
+<div><label for="f6">Heartbeat interval while idle (0 = none)</label><div class="in"><input id="f6" type="number" min="0" data-field="heartbeat"><span>s</span></div></div>
+<div><label for="f7">Heartbeat payload</label><div class="in"><input id="f7" type="number" min="0" data-field="heartbeatSize"><span>B</span></div></div>
+<div><label for="f8">Events, alarms or transactions per day</label><div class="in"><input id="f8" type="number" min="0" data-field="events"></div></div>
+<div><label for="f9">Payload per event</label><div class="in"><input id="f9" type="number" min="0" data-field="eventSize"><span>B</span></div></div>
+<div><label for="f10">Downlink commands per day</label><div class="in"><input id="f10" type="number" min="0" data-field="downlinks"></div></div>
+<div><label for="f11">Payload per command</label><div class="in"><input id="f11" type="number" min="0" data-field="downlinkSize"><span>B</span></div></div>
+<div><label for="f12">New connections per day</label><div class="in"><input id="f12" type="number" min="0" data-field="setups"></div></div>
+<div><label for="f13">Bytes per connection setup (TCP ~200 B, TLS a few KB)</label><div class="in"><input id="f13" type="number" min="0" data-field="setupSize"><span>B</span></div></div>
+<div><label for="f14">Firmware updates (OTA) per month</label><div class="in"><input id="f14" type="number" min="0" step="0.1" data-field="otaMb"><span>MB</span></div></div>
+<div><label for="f15">Retries and signalling margin</label><div class="in"><input id="f15" type="number" min="0" data-field="retry"><span>%</span></div></div>
+</div></div>
+</div>
+
+<aside class="card result" aria-live="polite">
+<div>Per device per month</div>
+<div class="big" data-out="perDevice">0 MB</div>
+<div>Whole fleet per month (<span data-out="devices">0</span> devices)</div>
+<div class="big" style="font-size:1.6rem" data-out="fleet">0 GB</div>
+<div style="font-size:.8rem;color:var(--muted)">Reports per active day: <span data-out="reports">0</span></div>
+<div data-break="reports"><div class="row"><span>Reports</span><span data-break-value></span></div><div class="bar"><i data-break-bar></i></div></div>
+<div data-break="heartbeats"><div class="row"><span>Heartbeats</span><span data-break-value></span></div><div class="bar"><i data-break-bar></i></div></div>
+<div data-break="events"><div class="row"><span>Events</span><span data-break-value></span></div><div class="bar"><i data-break-bar></i></div></div>
+<div data-break="downlinks"><div class="row"><span>Commands</span><span data-break-value></span></div><div class="bar"><i data-break-bar></i></div></div>
+<div data-break="setups"><div class="row"><span>Connection setup</span><span data-break-value></span></div><div class="bar"><i data-break-bar></i></div></div>
+<div data-break="ota"><div class="row"><span>Firmware (OTA)</span><span data-break-value></span></div><div class="bar"><i data-break-bar></i></div></div>
+<p class="note" data-out="note"></p>
+<a class="btn" href="https://www.globallotsim.com/iot-data-usage-calculator/">Open the hosted calculator (EN / 中文 / ES)</a>
+<p style="font-size:.75rem;color:var(--muted)">30 days per month; 1 MB = 1,048,576 bytes.</p>
+</aside>
+</div>
+</main>
+<script type="application/json" id="iot-calculator-i18n">{"fits30":"Within 30 MB per month per device. Confirm with real usage from a pilot.","over30":"Above 30 MB per month per device. Check reporting interval, reconnections and firmware updates."}</script>
+<script src="calculator.js"></script>
+</body>
+</html>
