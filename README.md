@@ -45,6 +45,7 @@ Always confirm the estimate with measured usage from a pilot.
 - [APN setup for cellular modules and routers](https://github.com/loginzhou/globallotsim-iot-apn-config-guide)
 
 Maintained by [Quanqiu IoT](https://www.globallotsim.com), a Global IoT SIM and eSIM connectivity provider.
+- [GPS tracker reporting intervals and keep-alive timers](https://www.globallotsim.com/iot-sim-for-gps-tracker-reporting-intervals-and-keep-alive-timers/) — firmware settings that drive monthly data
 
 ## License
 
