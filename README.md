@@ -43,9 +43,9 @@ Always confirm the estimate with measured usage from a pilot.
 - [IoT SIM for GPS trackers: 30 MB plans, pooled data and APN setup](https://www.globallotsim.com/gps-tracker-sim/)
 - [APN and SMS setup for GPS trackers](https://github.com/loginzhou/gps-tracker-iot-sim-apn-settings)
 - [APN setup for cellular modules and routers](https://github.com/loginzhou/globallotsim-iot-apn-config-guide)
+- [GPS tracker reporting intervals and keep-alive timers](https://www.globallotsim.com/iot-sim-for-gps-tracker-reporting-intervals-and-keep-alive-timers/) — firmware settings that drive monthly data
 
 Maintained by [Quanqiu IoT](https://www.globallotsim.com), a Global IoT SIM and eSIM connectivity provider.
-- [GPS tracker reporting intervals and keep-alive timers](https://www.globallotsim.com/iot-sim-for-gps-tracker-reporting-intervals-and-keep-alive-timers/) — firmware settings that drive monthly data
 
 ## License
 
